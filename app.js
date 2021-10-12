@@ -2,10 +2,11 @@ let canvas = document.querySelector('canvas')
 let context = canvas.getContext('2d')
 let width = canvas.width = window.innerWidth
 let height = canvas.height = window.innerHeight
-let nodesMaxRadius = 4, nodesColor = '#fff', nodesSpeed = 2, nodes = []
+let nodesMaxRadius = 4, nodesColor = '#fff', nodes = []
 
 let maxDistance = width < 600 ? 50 : 100
 let nodesNumber = width < 600 ? 250 : 350
+let nodesSpeed = width < 600 ? 1 : 2
 
 function startAnimation () {
     context.clearRect(0, 0, width, height)
