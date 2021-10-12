@@ -1,6 +1,5 @@
 let canvas = document.querySelector('canvas')
 let context = canvas.getContext('2d')
-
 let width = canvas.width = window.innerWidth
 let height = canvas.height = window.innerHeight
 let nodesNumber = 350, maxDistance = 100, nodesMaxRadius = 4,
