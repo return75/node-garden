@@ -3,7 +3,7 @@ let context = canvas.getContext('2d')
 
 let width = canvas.width = window.innerWidth
 let height = canvas.height = window.innerHeight
-let nodesNumber = 400
+let nodesNumber = 350
 let maxDistance = 100
 let nodesMaxRadius = 4
 let nodesColor = '#fff'
