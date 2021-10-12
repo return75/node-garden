@@ -3,13 +3,8 @@ let context = canvas.getContext('2d')
 
 let width = canvas.width = window.innerWidth
 let height = canvas.height = window.innerHeight
-let nodesNumber = 350
-let maxDistance = 100
-let nodesMaxRadius = 4
-let nodesColor = '#fff'
-let nodesSpeed = 2
-
-let nodes = []
+let nodesNumber = 350, maxDistance = 100, nodesMaxRadius = 4,
+    nodesColor = '#fff', nodesSpeed = 2, nodes = []
 
 function startAnimation () {
     context.clearRect(0, 0, width, height)
@@ -21,7 +16,7 @@ function startAnimation () {
 }
 function setBackgroundForCanvas () {
     let gradient = context.createRadialGradient(width / 2, height / 2, height / 20, width / 2, height / 2, height);
-    gradient.addColorStop(0, "#035773");
+    gradient.addColorStop(0, "#006d91");
     gradient.addColorStop(1, "#000");
 
     context.fillStyle = gradient;
