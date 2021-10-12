@@ -7,7 +7,7 @@ let nodesNumber = 350
 let maxDistance = 100
 let nodesMaxRadius = 4
 let nodesColor = '#fff'
-let nodesSpeed = 3
+let nodesSpeed = 2
 
 let nodes = []
 
@@ -20,7 +20,7 @@ function startAnimation () {
     requestAnimationFrame(startAnimation);
 }
 function setBackgroundForCanvas () {
-    let gradient = context.createRadialGradient(width / 2, height / 2, 10, width / 2, height / 2, 900);
+    let gradient = context.createRadialGradient(width / 2, height / 2, height / 20, width / 2, height / 2, height);
     gradient.addColorStop(0, "#035773");
     gradient.addColorStop(1, "#000");
 
