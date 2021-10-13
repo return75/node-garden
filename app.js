@@ -64,7 +64,7 @@ function drawLineBetweenNodes () {
                 context.moveTo(nodes[i].x, nodes[i].y)
                 context.lineTo(nodes[j].x, nodes[j].y)
                 context.strokeStyle = nodesColor
-                context.lineWidth = 1 - distance / maxDistance
+                context.lineWidth = Math.max(0.2, 1 - distance / maxDistance)
                 context.stroke()
             }
 
