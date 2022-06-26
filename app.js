@@ -103,7 +103,7 @@ function drawTriangles () {
                 })
             }
         } else {
-            let nearNodes = nodes.filter(node => !node.connected && Math.abs(nodes[i].x - node.x) < maxDistance &&
+            let nearNodes = nodes.filter(node => !node.connected && node.id !== nodes[i].id && Math.abs(nodes[i].x - node.x) < maxDistance &&
                 Math.abs(nodes[i].y - node.y) < maxDistance)
             let twoNearNode = nearNodes.sort((a,b) => a - b).slice(1, 3);
             if (twoNearNode.length < 2) {
@@ -111,19 +111,15 @@ function drawTriangles () {
             }
             drawTriangle(nodes[i], ...twoNearNode)
             nodes[i].connections = [...twoNearNode.map(i => i.id)]
+            nodes[i].connected = true
             twoNearNode = twoNearNode.map(item => {
                 item.connected = true
                 return item
             })
-            nodes[i].connected = true
         }
-
-
     }
-    // nodes = nodes.map(item => {
-    //     item.connected = false
-    //     return item
-    // })
+    console.log(nodes)
+
 }
 
 function drawTriangle (node1, node2, node3) {
