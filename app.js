@@ -5,8 +5,8 @@ let height = canvas.height = window.innerHeight
 let nodesMaxRadius = 4, nodesColor = '#000000', nodes = []
 let animationFrameId = null
 
-let maxDistance = width < 600 ? 50 : 60
-let nodesNumber = width < 600 ? 250 : 350
+let maxDistance = width < 600 ? 50 : 100
+let nodesNumber = width < 600 ? 250 : 30
 let nodesSpeed = width < 600 ? 1 : 1
 let colors = ['#54BAB9', '#FF7396', '#F4E06D', '#53BF9D', '#5FD068', '#C70A80']
 
@@ -27,6 +27,10 @@ function createRandomNodes () {
             yVelocity: Math.random() * nodesSpeed - nodesSpeed / 2,
             radius: Math.random() * nodesMaxRadius,
             connected: false,
+            id: i,
+            connections: [],
+            tempDisconnect: false,
+            triangleOpacity: 1,
         })
     }
 }
@@ -48,6 +52,7 @@ function drawNodes () {
         context.arc(node.x, node.y, node.radius, 0, 2 * Math.PI)
         context.fillStyle = nodesColor
         context.fill()
+        context.fillText(node.id, node.x, node.y - 3);
     })
 }
 function drawLineBetweenNodes () {
@@ -68,29 +73,68 @@ function drawLineBetweenNodes () {
 }
 function drawTriangles () {
     for (let i = 0; i < nodes.length - 1; i++) {
-        let nearNodes = nodes.filter(node => !node.connected && Math.abs(nodes[i].x - node.x) < maxDistance && Math.abs(nodes[i].y - node.y) < maxDistance)
-        let twoNearNode = nearNodes.sort((a,b) => a - b).slice(1, 3);
-        if (twoNearNode.length < 2) {
-            continue
+        if (nodes[i].connections.length) {
+            let connectedNodesId = nodes[i].connections
+            let connectedNodes = nodes.filter(node => connectedNodesId.includes(node.id) &&
+                Math.abs(nodes[i].x - node.x) < maxDistance && Math.abs(nodes[i].y - node.y) < maxDistance)
+
+            if (connectedNodes.length < 2) {
+                nodes[i].tempDisconnect = true
+            }
+            if (nodes[i].tempDisconnect) {
+                nodes[i].triangleOpacity *= .95
+            }
+            if (connectedNodes.length === 2) {
+                drawTriangle(nodes[i], ...connectedNodes)
+            }
+            if (nodes[i].triangleOpacity > .01) {
+                let tempConnectedNodes = nodes.filter(node => connectedNodesId.includes(node.id))
+                drawTriangle(nodes[i], ...tempConnectedNodes)
+
+            } else {
+                nodes[i].tempDisconnect = false
+                nodes[i].connections = []
+                nodes[i].connected = false
+                nodes[i].triangleOpacity = 1
+                connectedNodes.map(node => {
+                    node.connected = false
+                    node.triangleOpacity = 1
+                    return i
+                })
+            }
+        } else {
+            let nearNodes = nodes.filter(node => !node.connected && Math.abs(nodes[i].x - node.x) < maxDistance &&
+                Math.abs(nodes[i].y - node.y) < maxDistance)
+            let twoNearNode = nearNodes.sort((a,b) => a - b).slice(1, 3);
+            if (twoNearNode.length < 2) {
+                continue
+            }
+            drawTriangle(nodes[i], ...twoNearNode)
+            nodes[i].connections = [...twoNearNode.map(i => i.id)]
+            twoNearNode = twoNearNode.map(item => {
+                item.connected = true
+                return item
+            })
+            nodes[i].connected = true
         }
-        context.beginPath()
-        context.moveTo(nodes[i].x, nodes[i].y)
-        context.lineTo(twoNearNode[0].x, twoNearNode[0].y)
-        context.lineTo(twoNearNode[1].x, twoNearNode[1].y)
-        context.closePath()
-        let color = colors[Math.floor(Math.random() * colors.length)]
-        context.fillStyle = 'rgba(0, 0, 0, .4)'
-        context.fill()
-        twoNearNode = twoNearNode.map(item => {
-            item.connected = true
-            return item
-        })
-        nodes[i].connected = true
+
+
     }
-    nodes = nodes.map(item => {
-        item.connected = false
-        return item
-    })
+    // nodes = nodes.map(item => {
+    //     item.connected = false
+    //     return item
+    // })
+}
+
+function drawTriangle (node1, node2, node3) {
+    context.beginPath()
+    context.moveTo(node1.x, node1.y)
+    context.lineTo(node2.x, node2.y)
+    context.lineTo(node3.x, node3.y)
+    context.closePath()
+    let color = colors[Math.floor(Math.random() * colors.length)]
+    context.fillStyle = `rgba(0, 0, 0, ${node1.triangleOpacity})`
+    context.fill()
 }
 
 function getNodesDistance (node1, node2) {
